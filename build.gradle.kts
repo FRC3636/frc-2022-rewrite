@@ -103,6 +103,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.junit.jupiter:junit-jupiter-params")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 java {
@@ -179,3 +180,6 @@ fun DependencyHandler.simulationRelease(dependencies: List<Provider<String>>) = 
 fun DependencyHandler.implementation(dependencies: List<Provider<String>>) = dependencies.forEach{ implementation(it) }
 fun DependencyHandler.annotationProcessor(dependencies: List<Provider<String>>) = dependencies.forEach{ annotationProcessor(it) }
  // @formatter:on
+repositories {
+    mavenCentral()
+}

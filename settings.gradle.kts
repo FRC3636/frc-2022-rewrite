@@ -16,6 +16,9 @@ pluginManagement {
             url = uri(frcHome.resolve("maven"))
         }
     }
+    plugins {
+        kotlin("jvm") version "2.1.20"
+    }
 }
 
 System.getProperties().apply {
