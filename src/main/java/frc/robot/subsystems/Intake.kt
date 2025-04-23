@@ -47,8 +47,6 @@ object Intake: Subsystem {
         }, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters)
     }
 
-    override fun periodic() {}
-
      fun intake(): Command = startEnd(
         {
             pivotMotor.closedLoopController.setReference(0.5, SparkBase.ControlType.kPosition)

@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Subsystem
 import frc.robot.Constants
+import frc.robot.utils.LimelightHelpers
+import kotlin.math.abs
 
 object Drivetrain: Subsystem {
 
@@ -62,6 +64,20 @@ object Drivetrain: Subsystem {
         }
 
     }
+
+    fun alignToTarget() : Command =
+        run {
+            val tx = LimelightHelpers.getTX("limelight")
+            val Kp = 0.5
+            val minTurn = 0.05
+
+            val steering_adjust = Kp * tx
+
+            if (abs(steering_adjust) > minTurn) {
+                rightMotor1.set(-steering_adjust)
+                leftMotor1.set(steering_adjust)
+            }
+        }
 
     fun driveWithJoysticks(translationJoystick: Joystick, rotationJoystick: Joystick): Command =
         run {
