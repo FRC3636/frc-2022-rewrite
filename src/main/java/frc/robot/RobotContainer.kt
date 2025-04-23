@@ -37,13 +37,10 @@ object RobotContainer
         controller.leftBumper().onTrue(Intake.outtake())
         controller.rightBumper().onTrue(Intake.intake())
 
-//        controller.a().onTrue(Shooter.spinUp())
-//        controller.b().onTrue(Indexer.intake())
-
         controller.a().onTrue(
             Commands.race(
-                Commands.waitTime(Seconds.of(5.0)), //TODO: Make this wait for a shooter velocity
-                Shooter.spinUp()
+                Shooter.spinUp(),
+                Commands.waitUntil { Shooter.velocity > RotationsPerSecond.of(1.0) }
             ).andThen(
                 Intake.intake() // TODO: Only index one ball
             )
