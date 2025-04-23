@@ -79,6 +79,11 @@ object Drivetrain: Subsystem {
             }
         }
 
+    fun moveToTarget() : Command =
+        run {
+            //TODO()
+        }
+
     fun driveWithJoysticks(translationJoystick: Joystick, rotationJoystick: Joystick): Command =
         run {
             val drive = 0.5 * translationJoystick.x
