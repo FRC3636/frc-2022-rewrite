@@ -71,15 +71,20 @@ object Drivetrain: Subsystem {
     fun alignToTarget() : Command =
         run {
             val tx = LimelightHelpers.getTX("limelight")
-            val Kp = 0.5
+            val kp = 0.5
             val minTurn = 0.05
 
-            val steering_adjust = Kp * tx
+            val steeringAdjust = kp * tx
 
-            if (abs(steering_adjust) > minTurn) {
-                rightMotor1.set(-steering_adjust)
-                leftMotor1.set(steering_adjust)
+            if (abs(steeringAdjust) > minTurn) {
+                rightMotor1.set(-steeringAdjust)
+                leftMotor1.set(steeringAdjust)
             }
+        }
+
+    fun moveToTarget() : Command =
+        run {
+            //TODO()
         }
 
     fun driveWithJoysticks(translationJoystick: Joystick, rotationJoystick: Joystick): Command =
