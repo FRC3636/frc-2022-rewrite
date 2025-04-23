@@ -18,6 +18,9 @@ object Drivetrain: Subsystem {
     private val leftMotor2 = TalonFX(Constants.Drivetrain.MOTOR_LEFT_2)
     private val rightMotor1 = TalonFX(Constants.Drivetrain.MOTOR_RIGHT_1)
     private val rightMotor2 = TalonFX(Constants.Drivetrain.MOTOR_RIGHT_2)
+    private const val kP = .1
+    private const val minCommand = .05
+//    var inputs = LoggedDrivetrainInputs()
 
     private val odometry = DifferentialDriveOdometry(Rotation2d(), 0.0, 0.0)
     private val navX: AHRS = AHRS(AHRS.NavXComType.kMXP_SPI)
@@ -87,4 +90,9 @@ object Drivetrain: Subsystem {
             rightMotor1.set(drive - turn)
             leftMotor1.set(drive + turn)
         }
+
+    override fun periodic() {
+//        updateInputs(inputs)
+//        Logger.processInputs("Drivetrain", inputs)
+    }
 }
