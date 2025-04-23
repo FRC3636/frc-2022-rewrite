@@ -1,6 +1,10 @@
 package frc.robot
 
+import edu.wpi.first.units.Units.*
 import edu.wpi.first.wpilibj2.command.Command
+import edu.wpi.first.wpilibj2.command.Commands
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -15,6 +19,11 @@ import edu.wpi.first.wpilibj2.command.Command
  */
 object RobotContainer
 {
+
+    private val controller = CommandXboxController(2)
+    private val joystickLeft = CommandJoystick(0)
+    private val joystickRight = CommandJoystick(1)
+
     init
     {
         configureBindings()
@@ -23,7 +32,22 @@ object RobotContainer
     /** Use this method to define your `trigger->command` mappings. */
     private fun configureBindings()
     {
+        Drivetrain.defaultCommand = Drivetrain.driveWithJoysticks(joystickLeft.hid, joystickRight.hid)
 
+        controller.leftBumper().onTrue(Intake.outtake())
+        controller.rightBumper().onTrue(Intake.intake())
+
+//        controller.a().onTrue(Shooter.spinUp())
+//        controller.b().onTrue(Indexer.intake())
+
+        controller.a().onTrue(
+            Commands.race(
+                Commands.waitTime(Seconds.of(5.0)), //TODO: Make this wait for a shooter velocity
+                Shooter.spinUp()
+            ).andThen(
+                Intake.intake() // TODO: Only index one ball
+            )
+        )
     }
 
     fun getAutonomousCommand(): Command?
