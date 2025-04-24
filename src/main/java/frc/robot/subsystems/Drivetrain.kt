@@ -6,6 +6,7 @@ import com.studica.frc.AHRS
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry
 import edu.wpi.first.wpilibj.Joystick
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Subsystem
 import frc.robot.Constants
@@ -20,7 +21,7 @@ object Drivetrain: Subsystem {
     private val rightMotor2 = TalonFX(Constants.Drivetrain.MOTOR_RIGHT_2)
     private const val kP = .1
     private const val minCommand = .05
-//    var inputs = LoggedDrivetrainInputs()
+    var inputs = LoggedDrivetrainInputs()
 
     private val odometry = DifferentialDriveOdometry(Rotation2d(), 0.0, 0.0)
     private val navX: AHRS = AHRS(AHRS.NavXComType.kMXP_SPI)
@@ -82,6 +83,10 @@ object Drivetrain: Subsystem {
             }
         }
 
+    fun getkP(): Double {
+        return kP
+    }
+
     fun moveToTarget() : Command =
         run {
             //TODO()
@@ -98,6 +103,6 @@ object Drivetrain: Subsystem {
 
     override fun periodic() {
 //        updateInputs(inputs)
-//        Logger.processInputs("Drivetrain", inputs)
+        Logger.processInputs("Drivetrain", inputs)
     }
 }
