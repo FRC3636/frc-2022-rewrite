@@ -34,16 +34,21 @@ object RobotContainer
     {
         Drivetrain.defaultCommand = Drivetrain.driveWithJoysticks(joystickLeft.hid, joystickRight.hid)
 
-        controller.leftBumper().onTrue(Intake.outtake())
-        controller.rightBumper().onTrue(Intake.intake())
+        controller.leftBumper().whileTrue(Intake.outtake())
+        controller.rightBumper().whileTrue(Intake.intake())
 
-        controller.a().onTrue(
-            Commands.race(
+        controller.a().whileTrue(
+            Commands.parallel(
                 Shooter.spinUp(),
-                Commands.waitUntil { Shooter.velocity > RotationsPerSecond.of(1.0) }
-            ).andThen(
-                Intake.intake() // TODO: Only index one ball
+                Commands.sequence(
+                    Commands.waitUntil { Shooter.velocity > RotationsPerSecond.of(1.0) },
+                    Indexer.index() // TODO: Only index one ball
+                )
             )
+        )
+
+        controller.b().whileTrue(
+            Drivetrain.alignToTarget()
         )
     }
 
