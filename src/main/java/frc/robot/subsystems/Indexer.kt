@@ -22,7 +22,7 @@ object Indexer : Subsystem {
 
     override fun periodic() {}
 
-    fun index(): Command = startEnd(
+    fun index(useSensor: Boolean = false): Command = startEnd(
         {
             motor.set(0.75)
         },
@@ -30,17 +30,9 @@ object Indexer : Subsystem {
             motor.set(0.0)
         }
     )
-        .onlyIf { !beamBreak.get() }
-        .until { beamBreak.get() }
+        .onlyIf { !beamBreak.get() || !useSensor }
+        .until { beamBreak.get() && useSensor }
 
-    fun indexIgnoreSensor(): Command = startEnd(
-        {
-            motor.set(0.75)
-        },
-        {
-            motor.set(0.0)
-        }
-    )
 
     fun lower(): Command = startEnd(
         {

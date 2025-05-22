@@ -33,42 +33,30 @@ object RobotContainer
     private fun configureBindings()
     {
         Drivetrain.defaultCommand = Drivetrain.driveWithJoysticks(joystickLeft.hid, joystickRight.hid)
-        Indexer.defaultCommand = Indexer.index()
+        Indexer.defaultCommand = Indexer.index(true)
+
+        joystickRight.button(1).whileTrue(
+            Indexer.index()
+        )
+
+        joystickLeft.button(1).whileTrue(
+            Indexer.index()
+        )
 
         controller.leftBumper().whileTrue(Intake.outtake())
         controller.rightBumper().whileTrue(Intake.intake())
 
         controller.a().whileTrue(
-            Commands.parallel(
-                Shooter.spinUp(1.0),
-                Commands.sequence(
-                    Commands.waitUntil { Shooter.velocity > RotationsPerSecond.of(0.5) },
-                    Indexer.indexIgnoreSensor()
-                )
-            )
+            Shooter.spinUp(1.0),
         )
 
         controller.b().whileTrue(
-            Commands.parallel(
-                Shooter.spinUp(0.3),
-                Commands.sequence(
-                    Commands.waitUntil { Shooter.velocity > RotationsPerSecond.of(0.5) },
-                    Indexer.indexIgnoreSensor()
-                )
-            )
+            Shooter.spinUp(0.3)
         )
 
         controller.x().whileTrue(
-            Commands.parallel(
-                Shooter.spinUp(0.5),
-                Commands.sequence(
-                    Commands.waitUntil { Shooter.velocity > RotationsPerSecond.of(0.5) },
-                    Indexer.indexIgnoreSensor()
-                )
-            )
+            Shooter.spinUp(0.5),
         )
-
-
 
         controller.b().whileTrue(
             Drivetrain.alignToTarget()
