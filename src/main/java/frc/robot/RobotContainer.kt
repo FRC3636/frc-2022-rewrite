@@ -40,13 +40,35 @@ object RobotContainer
 
         controller.a().whileTrue(
             Commands.parallel(
-                Shooter.spinUp(),
+                Shooter.spinUp(1.0),
                 Commands.sequence(
                     Commands.waitUntil { Shooter.velocity > RotationsPerSecond.of(0.5) },
-                    Indexer.indexIgnoreSensor() // TODO: Only index one ball
+                    Indexer.indexIgnoreSensor()
                 )
             )
         )
+
+        controller.b().whileTrue(
+            Commands.parallel(
+                Shooter.spinUp(0.3),
+                Commands.sequence(
+                    Commands.waitUntil { Shooter.velocity > RotationsPerSecond.of(0.5) },
+                    Indexer.indexIgnoreSensor()
+                )
+            )
+        )
+
+        controller.x().whileTrue(
+            Commands.parallel(
+                Shooter.spinUp(0.5),
+                Commands.sequence(
+                    Commands.waitUntil { Shooter.velocity > RotationsPerSecond.of(0.5) },
+                    Indexer.indexIgnoreSensor()
+                )
+            )
+        )
+
+
 
         controller.b().whileTrue(
             Drivetrain.alignToTarget()

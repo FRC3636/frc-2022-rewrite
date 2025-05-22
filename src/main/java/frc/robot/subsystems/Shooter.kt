@@ -34,14 +34,14 @@ object Shooter: Subsystem {
 
     val velocity get() = topMotor.velocity.value
 
-     fun spinUp(): Command = startEnd(
+     fun spinUp(multiplier: Double): Command = startEnd(
         {
-            topMotor.setVoltage(12.0)
-            bottomMotor.setVoltage(10.0)
+            topMotor.setVoltage(12.0 * multiplier)
+            bottomMotor.setVoltage(10.0 * multiplier)
         },
         {
-            topMotor.set(0.0)
-            bottomMotor.set(0.0)
+            topMotor.setVoltage(0.0)
+            bottomMotor.setVoltage(0.0)
         }
     )
 }
