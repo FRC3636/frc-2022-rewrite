@@ -33,6 +33,7 @@ object RobotContainer
     private fun configureBindings()
     {
         Drivetrain.defaultCommand = Drivetrain.driveWithJoysticks(joystickLeft.hid, joystickRight.hid)
+        Indexer.defaultCommand = Indexer.index()
 
         controller.leftBumper().whileTrue(Intake.outtake())
         controller.rightBumper().whileTrue(Intake.intake())
@@ -41,8 +42,8 @@ object RobotContainer
             Commands.parallel(
                 Shooter.spinUp(),
                 Commands.sequence(
-                    Commands.waitUntil { Shooter.velocity > RotationsPerSecond.of(1.0) },
-                    Indexer.index() // TODO: Only index one ball
+                    Commands.waitUntil { Shooter.velocity > RotationsPerSecond.of(0.5) },
+                    Indexer.indexIgnoreSensor() // TODO: Only index one ball
                 )
             )
         )

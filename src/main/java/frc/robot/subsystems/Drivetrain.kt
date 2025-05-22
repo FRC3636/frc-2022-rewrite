@@ -23,18 +23,18 @@ object Drivetrain: Subsystem {
 //    private val navX: AHRS = AHRS(AHRS.NavXComType.kMXP_SPI)
 
     init {
-        leftMotor2.setControl(Follower(Constants.Drivetrain.MOTOR_LEFT_1, true)) // TODO: false?
-        rightMotor2.setControl(Follower(Constants.Drivetrain.MOTOR_RIGHT_1, true))
+        leftMotor2.setControl(Follower(Constants.Drivetrain.MOTOR_LEFT_1, false)) // TODO: false?
+        rightMotor2.setControl(Follower(Constants.Drivetrain.MOTOR_RIGHT_1, false))
 
         val leftConfig = TalonFXConfiguration().apply{
             MotorOutput.apply{
-                Inverted = InvertedValue.Clockwise_Positive
+                Inverted = InvertedValue.CounterClockwise_Positive
             }
         }
 
         val rightConfig = TalonFXConfiguration().apply {
             MotorOutput.apply{
-                Inverted = InvertedValue.CounterClockwise_Positive
+                Inverted = InvertedValue.Clockwise_Positive
             }
         }
 
@@ -86,11 +86,11 @@ object Drivetrain: Subsystem {
 
     fun driveWithJoysticks(translationJoystick: Joystick, rotationJoystick: Joystick): Command =
         run {
-            val drive = 0.5 * translationJoystick.x
+            val drive = 0.5 * translationJoystick.x // X and Y are flipped, x is y and y is x
             val turn = 0.5 * rotationJoystick.y
 
-            rightMotor1.setVoltage(12.0 * (drive - turn))
-            leftMotor1.setVoltage(12.0 * (drive + turn))
+            rightMotor1.setVoltage(12.0 * (drive + turn))
+            leftMotor1.setVoltage(12.0 * (drive - turn))
         }
 
 }

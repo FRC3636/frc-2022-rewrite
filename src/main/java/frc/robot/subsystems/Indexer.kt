@@ -12,37 +12,39 @@ import kotlin.concurrent.timer
 
 object Indexer : Subsystem {
 
-    private var motor = SparkMax(0, kBrushless).apply {
+    private var motor = SparkMax(22, kBrushless).apply {
         configure(SparkMaxConfig().apply {
             idleMode(SparkBaseConfig.IdleMode.kBrake)
         }, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters)
     }
 
-    private var beamBreak = DigitalInput(0)
+    private var beamBreak = DigitalInput(1)
 
-    override fun periodic() {
-        if (beamBreak.get()) {
-            Indexer.index()
-        }
-    }
-
-    val beamBroken get() = { beamBreak.get() }
+    override fun periodic() {}
 
     fun index(): Command = startEnd(
         {
-            motor.set(0.25)
+            motor.set(0.75)
+        },
+        {
+            motor.set(0.0)
+        }
+    )
+        .onlyIf { !beamBreak.get() }
+        .until { beamBreak.get() }
+
+    fun indexIgnoreSensor(): Command = startEnd(
+        {
+            motor.set(0.75)
         },
         {
             motor.set(0.0)
         }
     )
 
-    fun runForTime(duration: Double): Command = runOnce {
-    }
-
     fun lower(): Command = startEnd(
         {
-            motor.set(-0.25)
+            motor.set(-0.75)
         },
         {
             motor.set(0.0)

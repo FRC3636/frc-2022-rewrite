@@ -21,31 +21,31 @@ object Intake: Subsystem {
             TalonFXConfiguration().apply {
                 MotorOutput.apply {
                     NeutralMode = NeutralModeValue.Coast
-                    Inverted = InvertedValue.Clockwise_Positive
+                    Inverted = InvertedValue.CounterClockwise_Positive
                 }
             }
         )
     }
 
-    private var pivotMotor = SparkMax(0, kBrushless).apply {
-        configure(SparkMaxConfig().apply {
-            idleMode(SparkBaseConfig.IdleMode.kBrake)
-
-            absoluteEncoder.apply {
-                positionConversionFactor(PI * 2)
-                velocityConversionFactor((PI * 2) / 60)
-            }
-
-            closedLoop.apply {
-                pid(0.0, 0.0, 0.0)
-                feedbackSensor(ClosedLoopConfig.FeedbackSensor.kAbsoluteEncoder)
-                positionWrappingEnabled(true)
-                positionWrappingMinInput(0.0)
-                positionWrappingMaxInput(PI * 2)
-            }
-
-        }, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters)
-    }
+//    private var pivotMotor = SparkMax(0, kBrushless).apply {
+//        configure(SparkMaxConfig().apply {
+//            idleMode(SparkBaseConfig.IdleMode.kBrake)
+//
+//            absoluteEncoder.apply {
+//                positionConversionFactor(PI * 2)
+//                velocityConversionFactor((PI * 2) / 60)
+//            }
+//
+//            closedLoop.apply {
+//                pid(0.0, 0.0, 0.0)
+//                feedbackSensor(ClosedLoopConfig.FeedbackSensor.kAbsoluteEncoder)
+//                positionWrappingEnabled(true)
+//                positionWrappingMinInput(0.0)
+//                positionWrappingMaxInput(PI * 2)
+//            }
+//
+//        }, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters)
+//    }
 
     override fun periodic() {
 
@@ -53,22 +53,22 @@ object Intake: Subsystem {
 
      fun intake(): Command = startEnd(
         {
-            pivotMotor.closedLoopController.setReference(0.5, SparkBase.ControlType.kPosition)
-            motor.set(0.25)
+//            pivotMotor.closedLoopController.setReference(0.5, SparkBase.ControlType.kPosition)
+            motor.set(0.5)
         },
         {
-            pivotMotor.closedLoopController.setReference(0.0, SparkBase.ControlType.kPosition)
+//            pivotMotor.closedLoopController.setReference(0.0, SparkBase.ControlType.kPosition)
             motor.set(0.0)
         }
     )
 
     fun outtake(): Command = startEnd(
         {
-            pivotMotor.closedLoopController.setReference(0.5, SparkBase.ControlType.kPosition)
-            motor.set(-0.25)
+//            pivotMotor.closedLoopController.setReference(0.5, SparkBase.ControlType.kPosition)
+            motor.set(-0.5)
         },
         {
-            pivotMotor.closedLoopController.setReference(0.0, SparkBase.ControlType.kPosition)
+//            pivotMotor.closedLoopController.setReference(0.0, SparkBase.ControlType.kPosition)
             motor.set(0.0)
         }
     )

@@ -1,4 +1,5 @@
 import com.ctre.phoenix6.configs.TalonFXConfiguration
+import com.ctre.phoenix6.controls.Follower
 import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.signals.InvertedValue
 import com.ctre.phoenix6.signals.NeutralModeValue
@@ -7,7 +8,18 @@ import edu.wpi.first.wpilibj2.command.Subsystem
 
 object Shooter: Subsystem {
 
-    private var motor = TalonFX(0).apply {
+    private var topMotor = TalonFX(5).apply {
+        configurator.apply(
+            TalonFXConfiguration().apply {
+                MotorOutput.apply {
+                    NeutralMode = NeutralModeValue.Coast
+                    Inverted = InvertedValue.CounterClockwise_Positive
+                }
+            }
+        )
+    }
+
+    private var bottomMotor = TalonFX(9).apply {
         configurator.apply(
             TalonFXConfiguration().apply {
                 MotorOutput.apply {
@@ -18,17 +30,18 @@ object Shooter: Subsystem {
         )
     }
 
-
     override fun periodic() {}
 
-    val velocity get() = motor.velocity.value
+    val velocity get() = topMotor.velocity.value
 
      fun spinUp(): Command = startEnd(
         {
-            motor.set(0.25)
+            topMotor.setVoltage(12.0)
+            bottomMotor.setVoltage(10.0)
         },
         {
-            motor.set(0.0)
+            topMotor.set(0.0)
+            bottomMotor.set(0.0)
         }
     )
 }
