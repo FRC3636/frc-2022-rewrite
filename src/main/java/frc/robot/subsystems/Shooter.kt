@@ -32,8 +32,6 @@ object Shooter: Subsystem {
 
     override fun periodic() {}
 
-    val velocity get() = topMotor.velocity.value
-
      fun spinUp(multiplier: Double): Command = startEnd(
         {
             topMotor.setVoltage(12.0 * multiplier)

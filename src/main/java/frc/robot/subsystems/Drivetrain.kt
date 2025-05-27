@@ -69,10 +69,11 @@ object Drivetrain: Subsystem {
 
             val steeringAdjust = alignController.calculate(tx)
 
-            if (abs(steeringAdjust) > MIN_TURN) {
-                rightMotor1.setVoltage(-steeringAdjust)
-                leftMotor1.setVoltage(steeringAdjust)
-            }
+            alignController.setTolerance(.05)
+//            if (abs(steeringAdjust) > MIN_TURN) {
+//                rightMotor1.setVoltage(-steeringAdjust)
+//                leftMotor1.setVoltage(steeringAdjust)
+//            }
         }
 
     fun getkP(): Double {
