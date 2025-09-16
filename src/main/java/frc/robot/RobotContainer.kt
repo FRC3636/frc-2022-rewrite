@@ -55,7 +55,7 @@ object RobotContainer
         controller.rightBumper().whileTrue(Intake.intake())
 
         controller.a().whileTrue(
-            Shooter.spinUp(1.0),
+            Shooter.spinUp(0.6),
         )
 
         controller.b().whileTrue(

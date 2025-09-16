@@ -4,6 +4,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType.kBrushless
 import com.revrobotics.spark.SparkMax
 import com.revrobotics.spark.config.SparkBaseConfig
 import com.revrobotics.spark.config.SparkMaxConfig
+import edu.wpi.first.math.MathUtil.clamp
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Subsystem
@@ -23,7 +24,8 @@ object Indexer : Subsystem {
 
     fun index(useSensor: Boolean = false): Command = startEnd(
         {
-            motor.set(Constants.Indexer.INDEX_SPEED)
+
+            motor.set(clamp(Constants.Indexer.INDEX_SPEED, 0.0, 1.0))
         },
         {
             motor.set(0.0)
@@ -35,7 +37,7 @@ object Indexer : Subsystem {
 
     fun lower(): Command = startEnd(
         {
-            motor.set(-Constants.Indexer.INDEX_SPEED)
+            motor.set(-clamp(Constants.Indexer.INDEX_SPEED,0.0, 1.0))
         },
         {
             motor.set(0.0)
