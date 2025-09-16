@@ -7,24 +7,23 @@ import com.revrobotics.spark.config.SparkMaxConfig
 import edu.wpi.first.wpilibj.DigitalInput
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Subsystem
-import jdk.internal.icu.impl.Utility
-import kotlin.concurrent.timer
+import frc.robot.Constants
 
 object Indexer : Subsystem {
 
-    private var motor = SparkMax(22, kBrushless).apply {
+    private var motor = SparkMax(Constants.Indexer.MOTOR_CAN_ID, kBrushless).apply {
         configure(SparkMaxConfig().apply {
             idleMode(SparkBaseConfig.IdleMode.kBrake)
         }, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters)
     }
 
-    private var beamBreak = DigitalInput(1)
+    private var beamBreak = DigitalInput(Constants.Indexer.BEAM_BREAK_PORT)
 
     override fun periodic() {}
 
     fun index(useSensor: Boolean = false): Command = startEnd(
         {
-            motor.set(0.75)
+            motor.set(Constants.Indexer.INDEX_SPEED)
         },
         {
             motor.set(0.0)
@@ -36,7 +35,7 @@ object Indexer : Subsystem {
 
     fun lower(): Command = startEnd(
         {
-            motor.set(-0.75)
+            motor.set(-Constants.Indexer.INDEX_SPEED)
         },
         {
             motor.set(0.0)

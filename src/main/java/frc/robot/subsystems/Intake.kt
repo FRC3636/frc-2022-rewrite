@@ -12,11 +12,12 @@ import com.revrobotics.spark.config.SparkBaseConfig
 import com.revrobotics.spark.config.SparkMaxConfig
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Subsystem
+import frc.robot.Constants
 import kotlin.math.PI
 
 object Intake: Subsystem {
 
-    private var motor = TalonFX(6).apply {
+    private var motor = TalonFX(Constants.Intake.MOTOR_CAN_ID).apply {
         configurator.apply(
             TalonFXConfiguration().apply {
                 MotorOutput.apply {
@@ -25,30 +26,6 @@ object Intake: Subsystem {
                 }
             }
         )
-    }
-
-//    private var pivotMotor = SparkMax(0, kBrushless).apply {
-//        configure(SparkMaxConfig().apply {
-//            idleMode(SparkBaseConfig.IdleMode.kBrake)
-//
-//            absoluteEncoder.apply {
-//                positionConversionFactor(PI * 2)
-//                velocityConversionFactor((PI * 2) / 60)
-//            }
-//
-//            closedLoop.apply {
-//                pid(0.0, 0.0, 0.0)
-//                feedbackSensor(ClosedLoopConfig.FeedbackSensor.kAbsoluteEncoder)
-//                positionWrappingEnabled(true)
-//                positionWrappingMinInput(0.0)
-//                positionWrappingMaxInput(PI * 2)
-//            }
-//
-//        }, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters)
-//    }
-
-    override fun periodic() {
-
     }
 
      fun intake(): Command = startEnd(

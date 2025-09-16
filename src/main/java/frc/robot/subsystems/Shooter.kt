@@ -5,10 +5,11 @@ import com.ctre.phoenix6.signals.InvertedValue
 import com.ctre.phoenix6.signals.NeutralModeValue
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Subsystem
+import frc.robot.Constants
 
 object Shooter: Subsystem {
 
-    private var topMotor = TalonFX(5).apply {
+    private var topMotor = TalonFX(Constants.Shooter.TOP_MOTOR_CAN_ID).apply {
         configurator.apply(
             TalonFXConfiguration().apply {
                 MotorOutput.apply {
@@ -19,7 +20,7 @@ object Shooter: Subsystem {
         )
     }
 
-    private var bottomMotor = TalonFX(9).apply {
+    private var bottomMotor = TalonFX(Constants.Shooter.BOTTOM_MOTOR_CAN_ID).apply {
         configurator.apply(
             TalonFXConfiguration().apply {
                 MotorOutput.apply {
@@ -34,8 +35,8 @@ object Shooter: Subsystem {
 
      fun spinUp(multiplier: Double): Command = startEnd(
         {
-            topMotor.setVoltage(12.0 * multiplier)
-            bottomMotor.setVoltage(10.0 * multiplier)
+            topMotor.setVoltage(Constants.Shooter.TOP_SPIN_UP_BASE_SPEED * multiplier)
+            bottomMotor.setVoltage(Constants.Shooter.BOTTOM_SPIN_UP_BASE_SPEED * multiplier)
         },
         {
             topMotor.setVoltage(0.0)

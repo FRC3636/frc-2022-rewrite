@@ -86,11 +86,11 @@ object Drivetrain: Subsystem {
 
     fun driveWithJoysticks(translationJoystick: Joystick, rotationJoystick: Joystick): Command =
         run {
-            val drive = 0.5 * translationJoystick.x // X and Y are flipped, x is y and y is x
-            val turn = 0.5 * rotationJoystick.y
+            val drive = Constants.Drivetrain.SENSITIVITY * translationJoystick.x // X and Y are flipped, x is y and y is x
+            val turn = Constants.Drivetrain.SENSITIVITY * rotationJoystick.y
 
-            rightMotor1.setVoltage(12.0 * (drive + turn))
-            leftMotor1.setVoltage(12.0 * (drive - turn))
+            rightMotor1.setVoltage(Constants.Drivetrain.BASE_VOLTAGE * (drive + turn))
+            leftMotor1.setVoltage(Constants.Drivetrain.BASE_VOLTAGE * (drive - turn))
         }
 
 }
