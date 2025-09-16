@@ -32,7 +32,7 @@ object RobotContainer
     /** Use this method to define your `trigger->command` mappings. */
     private fun configureBindings()
     {
-        Drivetrain.defaultCommand = Drivetrain.driveWithJoysticks(joystickLeft.hid, joystickRight.hid)
+        Drivetrain.defaultCommand = Drivetrain.driveWithController(controller.hid)
         Indexer.defaultCommand = Indexer.index(true)
 
         joystickRight.button(1).whileTrue(

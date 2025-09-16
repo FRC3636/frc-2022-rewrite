@@ -4,6 +4,7 @@ import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.signals.InvertedValue
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.wpilibj.Joystick
+import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Subsystem
 import frc.robot.Constants
@@ -88,6 +89,15 @@ object Drivetrain: Subsystem {
         run {
             val drive = Constants.Drivetrain.SENSITIVITY * translationJoystick.x // X and Y are flipped, x is y and y is x
             val turn = Constants.Drivetrain.SENSITIVITY * rotationJoystick.y
+
+            rightMotor1.setVoltage(Constants.Drivetrain.BASE_VOLTAGE * (drive + turn))
+            leftMotor1.setVoltage(Constants.Drivetrain.BASE_VOLTAGE * (drive - turn))
+        }
+
+    fun driveWithController(controller: XboxController): Command =
+        run {
+            val drive = Constants.Drivetrain.SENSITIVITY * controller.rightY
+            val turn = Constants.Drivetrain.SENSITIVITY * controller.leftX
 
             rightMotor1.setVoltage(Constants.Drivetrain.BASE_VOLTAGE * (drive + turn))
             leftMotor1.setVoltage(Constants.Drivetrain.BASE_VOLTAGE * (drive - turn))
