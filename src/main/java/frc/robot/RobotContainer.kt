@@ -40,7 +40,15 @@ object RobotContainer
         )
 
         joystickLeft.button(1).whileTrue(
+            Indexer.lower()
+        )
+
+        controller.rightTrigger().whileTrue(
             Indexer.index()
+        )
+
+        controller.leftTrigger().whileTrue(
+            Indexer.lower()
         )
 
         controller.leftBumper().whileTrue(Intake.outtake())

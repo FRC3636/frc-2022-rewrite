@@ -87,8 +87,8 @@ object Drivetrain: Subsystem {
 
     fun driveWithJoysticks(translationJoystick: Joystick, rotationJoystick: Joystick): Command =
         run {
-            val drive = Constants.Drivetrain.SENSITIVITY * translationJoystick.x // X and Y are flipped, x is y and y is x
-            val turn = Constants.Drivetrain.SENSITIVITY * rotationJoystick.y
+            val drive = Constants.Drivetrain.DRIVING_SENSITIVITY * translationJoystick.x // X and Y are flipped, x is y and y is x
+            val turn = Constants.Drivetrain.DRIVING_SENSITIVITY * rotationJoystick.y
 
             rightMotor1.setVoltage(Constants.Drivetrain.BASE_VOLTAGE * (drive + turn))
             leftMotor1.setVoltage(Constants.Drivetrain.BASE_VOLTAGE * (drive - turn))
@@ -96,8 +96,16 @@ object Drivetrain: Subsystem {
 
     fun driveWithController(controller: XboxController): Command =
         run {
-            val drive = Constants.Drivetrain.SENSITIVITY * controller.rightY
-            val turn = Constants.Drivetrain.SENSITIVITY * controller.leftX
+            var drive = 0.0
+            var turn = 0.0
+
+            if (abs(controller.leftX) >= 0.05) {
+                drive = Constants.Drivetrain.DRIVING_SENSITIVITY * controller.leftX
+            }
+
+            if (abs(controller.rightY) >= 0.05) {
+                turn = Constants.Drivetrain.TURNING_SENSITIVITY * controller.rightY
+            }
 
             rightMotor1.setVoltage(Constants.Drivetrain.BASE_VOLTAGE * (drive + turn))
             leftMotor1.setVoltage(Constants.Drivetrain.BASE_VOLTAGE * (drive - turn))
