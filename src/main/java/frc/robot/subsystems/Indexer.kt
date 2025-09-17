@@ -25,7 +25,7 @@ object Indexer : Subsystem {
     fun index(useSensor: Boolean = false): Command = startEnd(
         {
 
-            motor.set(clamp(Constants.Indexer.INDEX_SPEED, 0.0, 1.0))
+            motor.set(clamp(Constants.Indexer.INDEX_SPEED, -1.0, 1.0))
         },
         {
             motor.set(0.0)
@@ -37,7 +37,7 @@ object Indexer : Subsystem {
 
     fun lower(): Command = startEnd(
         {
-            motor.set(-clamp(Constants.Indexer.INDEX_SPEED,0.0, 1.0))
+            motor.set(-clamp(Constants.Indexer.INDEX_SPEED, -1.0, 1.0))
         },
         {
             motor.set(0.0)

@@ -2,6 +2,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.controls.Follower
 import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.signals.InvertedValue
+import edu.wpi.first.math.MathUtil.clamp
 import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.XboxController
@@ -100,11 +101,11 @@ object Drivetrain: Subsystem {
             var turn = 0.0
 
             if (abs(controller.leftX) >= 0.05) {
-                drive = Constants.Drivetrain.DRIVING_SENSITIVITY * controller.leftX
+                drive = clamp(Constants.Drivetrain.DRIVING_SENSITIVITY * controller.leftX, 0.0, 1.0)
             }
 
             if (abs(controller.rightY) >= 0.05) {
-                turn = Constants.Drivetrain.TURNING_SENSITIVITY * controller.rightY
+                turn = clamp(Constants.Drivetrain.TURNING_SENSITIVITY * controller.rightY, 0.0, 0.15)
             }
 
             rightMotor1.setVoltage(Constants.Drivetrain.BASE_VOLTAGE * (drive + turn))

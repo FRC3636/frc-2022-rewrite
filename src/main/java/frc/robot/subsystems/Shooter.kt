@@ -36,8 +36,8 @@ object Shooter: Subsystem {
 
      fun spinUp(multiplier: Double): Command = startEnd(
         {
-            topMotor.setVoltage(clamp(Constants.Shooter.TOP_SPIN_UP_BASE_SPEED,0.0,24.0) * multiplier)
-            bottomMotor.setVoltage(clamp(Constants.Shooter.BOTTOM_SPIN_UP_BASE_SPEED,0.0,20.0) * multiplier)
+            topMotor.setVoltage(clamp(Constants.Shooter.TOP_SPIN_UP_BASE_SPEED, -12.0, 12.0) * multiplier)
+            bottomMotor.setVoltage(clamp(Constants.Shooter.BOTTOM_SPIN_UP_BASE_SPEED, -12.0, 12.0) * multiplier)
         },
         {
             topMotor.setVoltage(0.0)

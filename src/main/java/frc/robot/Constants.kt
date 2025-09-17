@@ -16,9 +16,10 @@ class Constants {
         const val MOTOR_RIGHT_2: Int = 2
         const val MOTOR_LEFT_1: Int = 3
         const val MOTOR_LEFT_2: Int = 4
+        const val BASE_VOLTAGE = 12.0
+        // Change the ones below me!
         const val DRIVING_SENSITIVITY = 0.5
         const val TURNING_SENSITIVITY = 0.15
-        const val BASE_VOLTAGE = 12.0
     }
 
     object Indexer {
@@ -34,6 +35,7 @@ class Constants {
     object Shooter {
         const val TOP_MOTOR_CAN_ID = 5
         const val BOTTOM_MOTOR_CAN_ID = 9
+        // Change the ones below me!
         const val TOP_SPIN_UP_BASE_SPEED = 12.0
         const val BOTTOM_SPIN_UP_BASE_SPEED = 10.0
     }
