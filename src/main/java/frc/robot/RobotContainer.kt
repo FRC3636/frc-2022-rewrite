@@ -54,17 +54,17 @@ object RobotContainer
         controller.leftBumper().whileTrue(Intake.outtake())
         controller.rightBumper().whileTrue(Intake.intake())
 
-        controller.a().whileTrue(
-            Shooter.spinUp(0.6),
-        )
+//        controller.a().whileTrue(
+//            Shooter.spinUp(0.6),
+//        )
 
         controller.b().whileTrue(
             Shooter.spinUp(0.3)
         )
 
-        controller.x().whileTrue(
-            Shooter.spinUp(0.5),
-        )
+//        controller.x().whileTrue(
+//            Shooter.spinUp(0.5),
+//        )
 
         controller.b().whileTrue(
             Drivetrain.alignToTarget()
