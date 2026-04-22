@@ -6,6 +6,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.Subsystem
 import frc.robot.Constants
+import frc.robot.Constants.Drivetrain.MOTOR_LEFT_1
+import frc.robot.RobotContainer
 
 object Shooter: Subsystem {
 
@@ -42,5 +44,9 @@ object Shooter: Subsystem {
             topMotor.setVoltage(0.0)
             bottomMotor.setVoltage(0.0)
         }
+    )
+
+    fun set_speed(multiplier: Double): Command = startEnd(
+        RobotContainer.
     )
 }

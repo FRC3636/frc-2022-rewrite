@@ -23,7 +23,6 @@ object RobotContainer
     private val controller = CommandXboxController(2)
     private val joystickLeft = CommandJoystick(0)
     private val joystickRight = CommandJoystick(1)
-
     init
     {
         configureBindings()
@@ -44,7 +43,8 @@ object RobotContainer
         )
 
         controller.rightTrigger().whileTrue(
-            Indexer.index()
+            Commands.parallel(Indexer.index(), Shooter.spinUp(1.0))
+
         )
 
         controller.leftTrigger().whileTrue(
@@ -55,7 +55,7 @@ object RobotContainer
         controller.rightBumper().whileTrue(Intake.intake())
 
         controller.a().whileTrue(
-            Shooter.spinUp(1.0),
+          Shooter.set_speed(1.0)
         )
 
         controller.b().whileTrue(
