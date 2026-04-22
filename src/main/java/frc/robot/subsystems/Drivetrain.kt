@@ -99,12 +99,12 @@ object Drivetrain: Subsystem {
             var drive = 0.0
             var turn = 0.0
 
-            if (abs(controller.leftX) >= 0.05) {
-                drive = Constants.Drivetrain.DRIVING_SENSITIVITY * controller.leftX
+            if (abs(controller.leftX) >= 0.10) {
+                drive = Constants.Drivetrain.TURNING_SENSITIVITY * controller.leftX
             }
 
-            if (abs(controller.rightY) >= 0.05) {
-                turn = Constants.Drivetrain.TURNING_SENSITIVITY * controller.rightY
+            if (abs(controller.rightY) >= 0.10) {
+                turn = Constants.Drivetrain.DRIVING_SENSITIVITY * controller.rightY
             }
 
             rightMotor1.setVoltage(Constants.Drivetrain.BASE_VOLTAGE * (drive + turn))
