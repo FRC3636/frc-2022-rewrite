@@ -1,5 +1,6 @@
 package frc.robot.subsystems.Intake
 
+import com.frcteam3636.frc2026.utils.math.rotationsPerSecond
 import edu.wpi.first.epilogue.Logged
 
 @Logged
