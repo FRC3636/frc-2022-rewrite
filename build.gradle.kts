@@ -15,12 +15,13 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
     The use of Kotlin DSL is only recommend for developers experienced with the Gradle Kotlin DSL.
     (This disclaimer is included at the request of the WPI Lib development team.)
  */
-        
+
 plugins {
     java
     kotlin("jvm") version "2.1.0"
     id("edu.wpi.first.GradleRIO") version "2025.3.2"
     idea
+    kotlin("kapt") version "2.1.0"
 }
 
 
@@ -104,6 +105,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
     implementation(kotlin("stdlib-jdk8"))
+    testImplementation(kotlin("test"))
 }
 
 java {
@@ -113,7 +115,7 @@ java {
     }
 }
 
-    
+
 kotlin {
     compilerOptions {
         jvmTarget = kotlinJvmTarget
@@ -148,7 +150,7 @@ tasks {
         // Adding this closure makes this expression lazy, allowing GradleRIO to add
         // its dependencies before the jar task is fully configured.
         from({ configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) } })
-        
+
         from({ sourceSets.main.get().allSource })
     }
 }
@@ -163,8 +165,8 @@ idea {
         isDownloadJavadoc = true
         isDownloadSources = true
         // Exclude the .vscode directory from indexing and search
-        excludeDirs.add(file(".run" ))
-        excludeDirs.add(file(".vscode" ))
+        excludeDirs.add(file(".run"))
+        excludeDirs.add(file(".vscode"))
     }
 }
 
