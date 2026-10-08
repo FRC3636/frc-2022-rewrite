@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Intake
 
 import com.frcteam3636.frc2026.utils.math.rotationsPerSecond
+import com.frcteam3636.frc2026.utils.math.*
 import edu.wpi.first.epilogue.Logged
 
 @Logged
@@ -8,5 +9,4 @@ import edu.wpi.first.epilogue.Logged
 open class intakeInputs{
     var velocity = 0.rotationsPerSecond
     var voltage = 0.volts
-    var
 }
