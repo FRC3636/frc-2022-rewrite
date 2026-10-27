@@ -6,58 +6,70 @@ import edu.wpi.first.toolchain.NativePlatforms
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-/*
-    == D I S C L A I M E R ==
-    Using Kotlin DSL for Gradle builds is not officially supported by FRC/WPILib.
-    As such, by using the Kotlin DSL, you acknowledge that you will not receive any support from the WPI Lib team,
-    and support from the community will likely be very limited. There are known issues with using Kotlin DSL Gradle
-    files in VS Code. As such, if you have team members using VS Code, use of the Kotlin DSL is not recommended.
-    The use of Kotlin DSL is only recommend for developers experienced with the Gradle Kotlin DSL.
-    (This disclaimer is included at the request of the WPI Lib development team.)
- */
-
 plugins {
     java
-    kotlin("jvm") version "2.1.0"
-    id("edu.wpi.first.GradleRIO") version "2025.3.2"
     idea
-    kotlin("kapt") version "2.1.0"
+    kotlin("jvm")
+    id("com.google.devtools.ksp")
+    id("edu.wpi.first.GradleRIO")
+    id("com.peterabeles.gversion") version "1.10.3"
 }
 
-
-val javaVersion: JavaVersion by extra { JavaVersion.VERSION_17 }
-val javaLanguageVersion: JavaLanguageVersion by extra { JavaLanguageVersion.of(javaVersion.toString()) }
+val javaVersion by extra(17)
 val jvmVendor: JvmVendorSpec by extra { JvmVendorSpec.ADOPTIUM }
-val kotlinJvmTarget: JvmTarget = JvmTarget.fromTarget(javaVersion.toString())
 
 @Suppress("PropertyName")
-val ROBOT_MAIN_CLASS = "frc.robot.Main"
+val ROBOT_MAIN_CLASS = "com.frcteam3636.swervebase.Main"
 
-// Define my targets (RoboRIO) and artifacts (deployable files)
-// This is added by GradleRIO's backing project DeployUtils.
-deploy {
-    targets {
-        val roborio by register<RoboRIO>("roborio") {
-            // Team number is loaded either from the .wpilib/wpilib_preferences.json
-            // or from command line. If not found an exception will be thrown.
-            // You can use project.frc.getTeamOrDefault(####) instead of project.frc.teamNumber
-            // if you want to store a team number in this file.
-            team = frc.teamNumber
-            debug = frc.getDebugOrDefault(false)
+gversion {
+    srcDir = layout.buildDirectory.dir("generated/gversion/main/kotlin").get().toString()
+    language = "kotlin"
+    classPackage = "com.frcteam3636.version"
+    dateFormat = "yyyy-MM-dd HH:mm:ss z"
+    timeZone = "America/Los_Angeles" // Use preferred time zone
+    indent = "    "
+}
+
+sourceSets {
+    main {
+        kotlin {
+            srcDir(gversion.srcDir)
         }
+    }
+}
 
-        roborio.artifacts {
-            register<FRCJavaArtifact>("frcJava") {
-                setJarTask(tasks.jar)
-            }
+tasks {
+    test {
+        useJUnitPlatform()
+        systemProperty("junit.jupiter.extensions.autodetection.enabled", "true")
+    }
 
-            register<FileTreeArtifact>("frcStaticFileDeploy") {
-                files = project.fileTree("src/main/deploy")
-                directory = "/home/lvuser/deploy"
-                // Change to true to delete files on roboRIO that no longer exist in deploy directory of this project
-                deleteOldFiles = false
-            }
-        }
+    compileKotlin {
+        dependsOn(createVersionFile)
+    }
+
+    compileJava {
+        options.encoding = Charsets.UTF_8.name()
+        // Configure string concat to always inline compile
+        options.compilerArgs.add("-XDstringConcat=inline")
+    }
+
+    // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
+    // in order to make them all available at runtime. Also adding the manifest so WPILib
+    // knows where to look for our Robot Class.
+    jar {
+        group = "build"
+        manifest(GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS))
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
+        // Adding this closure makes this expression lazy, allowing GradleRIO to add
+        // its dependencies before the jar task is fully configured.
+        from({
+            configurations
+                .runtimeClasspath
+                .get()
+                .map { if (it.isDirectory) it else zipTree(it) }
+        })
     }
 }
 
@@ -78,8 +90,52 @@ wpi {
     }
 }
 
-// Set this to true to enable desktop support.
-val includeDesktopSupport = true
+// Define my targets (RoboRIO) and artifacts (deployable files)
+// This is added by GradleRIO's backing project DeployUtils.
+deploy {
+    targets {
+        val roborio by register<RoboRIO>("roborio") {
+            // Team number is loaded either from the .wpilib/wpilib_preferences.json
+            // or from command line. If not found an exception will be thrown.
+            // You can use project.frc.getTeamOrDefault(####) instead of project.frc.teamNumber
+            // if you want to store a team number in this file.
+            team = frc.teamNumber
+            debug = frc.getDebugOrDefault(false)
+        }
+
+        roborio.artifacts {
+            register<FRCJavaArtifact>("frcJava") {
+                //jvmArgs.add("-Dcom.sun.management.jmxremote=true")
+                //jvmArgs.add("-Dcom.sun.management.jmxremote.port=1198")
+                //jvmArgs.add("-Dcom.sun.management.jmxremote.local.only=false")
+                //jvmArgs.add("-Dcom.sun.management.jmxremote.ssl=false")
+                //jvmArgs.add("-Dcom.sun.management.jmxremote.authenticate=false")
+                //jvmArgs.add("-Djava.rmi.server.hostname=10.36.36.2")
+                jvmArgs.add("-XX:+UnlockExperimentalVMOptions")
+                jvmArgs.add("-XX:GCTimeRatio=5")
+                jvmArgs.add("-XX:+UseSerialGC")
+                jvmArgs.add("-XX:MaxGCPauseMillis=50")
+
+                // Comment lines below if running on a Rio 1
+                val maxJavaHeapSize = 100
+                jvmArgs.add("-Xmx${maxJavaHeapSize}M")
+                jvmArgs.add("-Xms${maxJavaHeapSize}M")
+                jvmArgs.add("-XX:+AlwaysPreTouch")
+
+                // Enable asserts
+                jvmArgs.add("-ea")
+                setJarTask(tasks.jar)
+            }
+
+            register<FileTreeArtifact>("frcStaticFileDeploy") {
+                files = project.fileTree("src/main/deploy")
+                directory = "/home/lvuser/deploy"
+                // Change to true to delete files on roboRIO that no longer exist in deploy directory of this project
+                deleteOldFiles = true
+            }
+        }
+    }
+}
 
 dependencies {
     annotationProcessor(wpi.java.deps.wpilibAnnotations())
@@ -104,54 +160,37 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.junit.jupiter:junit-jupiter-params")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-    implementation(kotlin("stdlib-jdk8"))
-    testImplementation(kotlin("test"))
+
+    implementation(project(":annotation"))
+    ksp(project(":annotation"))
 }
 
-java {
-    toolchain {
-        languageVersion = javaLanguageVersion
-        vendor = jvmVendor
-    }
-}
+allprojects {
+    plugins.apply("java")
+    plugins.apply("org.jetbrains.kotlin.jvm")
 
-
-kotlin {
-    compilerOptions {
-        jvmTarget = kotlinJvmTarget
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(javaVersion)
+            vendor = jvmVendor
+        }
     }
 
-    jvmToolchain {
-        // https://kotlinlang.org/docs/gradle-configure-project.html#gradle-java-toolchains-support
-        languageVersion = javaLanguageVersion
-        vendor = jvmVendor
-    }
-}
-tasks {
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.fromTarget(javaVersion.toString())
+        }
 
-    test {
-        useJUnitPlatform()
-        systemProperty("junit.jupiter.extensions.autodetection.enabled", "true")
-    }
-    compileJava {
-        options.encoding = Charsets.UTF_8.name()
-        // Configure string concat to always inline compile
-        options.compilerArgs.add("-XDstringConcat=inline")
+        jvmToolchain {
+            // https://kotlinlang.org/docs/gradle-configure-project.html#gradle-java-toolchains-support
+            languageVersion = JavaLanguageVersion.of(javaVersion)
+            vendor = jvmVendor
+        }
     }
 
-    // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
-    // in order to make them all available at runtime. Also adding the manifest so WPILib
-    // knows where to look for our Robot Class.
-    jar {
-        group = "build"
-        manifest(GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS))
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
-
-        // Adding this closure makes this expression lazy, allowing GradleRIO to add
-        // its dependencies before the jar task is fully configured.
-        from({ configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) } })
-
-        from({ sourceSets.main.get().allSource })
+    repositories {
+        mavenLocal()
+        mavenCentral()
     }
 }
 
@@ -170,6 +209,10 @@ idea {
     }
 }
 
+
+// Set this to true to enable desktop support.
+val includeDesktopSupport = true
+
 // Helper Functions to keep syntax cleaner
 // @formatter:off
 fun DependencyHandler.addDependencies(configurationName: String, dependencies: List<Provider<String>>) = dependencies.forEach { add(configurationName, it) }
@@ -181,7 +224,4 @@ fun DependencyHandler.nativeRelease(dependencies: List<Provider<String>>) = addD
 fun DependencyHandler.simulationRelease(dependencies: List<Provider<String>>) = addDependencies("simulationRelease", dependencies)
 fun DependencyHandler.implementation(dependencies: List<Provider<String>>) = dependencies.forEach{ implementation(it) }
 fun DependencyHandler.annotationProcessor(dependencies: List<Provider<String>>) = dependencies.forEach{ annotationProcessor(it) }
- // @formatter:on
-repositories {
-    mavenCentral()
-}
+// @formatter:on

@@ -1,8 +1,19 @@
 pluginManagement {
+    val frcYear: String by settings
+    val kspVersion: String by settings
+    val kotlinVersion: String by settings
+    val wpilibVersion: String by settings
+
+    plugins {
+        kotlin("jvm") version kotlinVersion
+        id("com.google.devtools.ksp") version kspVersion
+        id("edu.wpi.first.GradleRIO") version wpilibVersion
+    }
+
     repositories {
         mavenLocal()
         gradlePluginPortal()
-        val frcYear = "2025"
+
         val frcHome = if (System.getProperty("os.name").contains("windows", ignoreCase = true)) {
             file(System.getenv("PUBLIC") ?: """C:\Users\Public""")
         } else {
@@ -16,10 +27,9 @@ pluginManagement {
             url = uri(frcHome.resolve("maven"))
         }
     }
-    plugins {
-        kotlin("jvm") version "2.1.20"
-    }
 }
+
+include(":annotation")
 
 System.getProperties().apply {
     setProperty("org.gradle.internal.native.headers.unresolved.dependencies.ignore", "true")
