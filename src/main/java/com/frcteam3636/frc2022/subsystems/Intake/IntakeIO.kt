@@ -4,15 +4,13 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration
 import com.ctre.phoenix6.hardware.TalonFX
 import com.ctre.phoenix6.signals.InvertedValue
 import com.ctre.phoenix6.signals.NeutralModeValue
-import com.frcteam3636.frc2026.utils.math.*
+import com.frcteam3636.frc2022.CTREDeviceId
 import com.frcteam3636.frc2022.utils.math.amps
 import com.frcteam3636.frc2022.utils.math.inVolts
 import com.frcteam3636.frc2022.utils.math.rotationsPerSecond
 import com.frcteam3636.frc2022.utils.math.volts
-//import edu.wpi.first.epilogue.Logged
 import org.team9432.annotation.Logged
 import edu.wpi.first.units.measure.Voltage
-import frc.CTREDeviceId
 
 @Logged
 open class IntakeInputs{

@@ -2,6 +2,7 @@
 
 package com.frcteam3636.frc2026.utils.math
 
+import com.frcteam3636.frc2022.utils.math.inRadians
 import edu.wpi.first.math.geometry.Rotation2d
 import edu.wpi.first.math.geometry.Translation2d
 import edu.wpi.first.units.measure.Angle
